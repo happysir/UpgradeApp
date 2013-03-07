@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    
+    android:background="#0D0D0D"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/netsystem"
+        android:textColor="#0FB3DB"
+        android:textSize="36sp" />
+
+    <TextView
+        android:id="@+id/system_firmware_info"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:focusable="true"
+        android:text="@string/no_firware"
+        android:textSize="32sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/netsystemapp"
+        android:textColor="#0FB3DB"
+        android:textSize="36sp" />
+
+    <ListView
+        android:id="@+id/update_app_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3.5" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:baselineAligned="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/selectall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawable="@color/selector"
+                android:text="@string/check_all"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/inverseselect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawable="@color/selector"
+                android:text="@string/check_nothing"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawable="@color/selector"
+                android:text="@string/cancle_selected"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/app_ok1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawable="@color/selector"
+                android:text="@string/network_download"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

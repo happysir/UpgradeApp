@@ -1,0 +1,20 @@
+<update>
+    <file name="baiduxinwen">
+		<realname>baidu_xinwen_1.1.0.apk</realname>
+		<version>2</version>
+		<url>http://gdown.baidu.com/data/wisegame/f98d235e39e29031/baiduxinwen.apk</url>
+		<hashnumber>2af26e7d8eb43abe759b403ca2c7386b</hashnumber>
+    </file>
+    <file name="FloatSearchBoxDemo">
+		<realname>FloatSearchBoxDemo.rar</realname>
+		<version>2</version>
+		<url>http://www.ideasandroid.com/android/demo/FloatSearchBoxDemo.rar</url>
+		<hashnumber>526fb80768e96212f980d3890725e0a5</hashnumber>
+    </file>
+    <file name="gujianbao">
+        <realname>g18ref-ota-20130301.zip</realname>
+		<version>v4.1.0</version>
+		<url>http://192.168.1.110/g18ref-ota-20130301.zip</url>
+		<hashnumber>526fb80768e96212f980d3890725e0a5</hashnumber>
+    </file>
+</update>

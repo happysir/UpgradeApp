@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingBottom="20dp"
+    android:paddingTop="0dp"
+    >
+
+    <ListView
+        android:id="@id/android:list"
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        android:scrollbars="vertical"
+        android:layout_weight="1"
+        android:scrollbarStyle="outsideInset"
+        android:scrollbarTrackVertical="@android:color/black"          
+        android:fadeScrollbars="false"
+        android:scrollbarSize="8dp" />
+
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:text="@string/no_data" />
+
+</LinearLayout>
