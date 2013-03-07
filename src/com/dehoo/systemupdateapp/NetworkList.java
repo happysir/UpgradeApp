@@ -202,7 +202,6 @@ public class NetworkList extends Activity implements OnClickListener {
 			}
 			break;
 		case R.id.app_ok1:
-			System.out.println("++OK++");
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).b) {
 //					Log.v("APP NAME", list.get(i).realname);
