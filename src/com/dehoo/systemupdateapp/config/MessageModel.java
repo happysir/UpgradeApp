@@ -1,4 +1,4 @@
-package com.dehoo.systemupdateapp;
+package com.dehoo.systemupdateapp.config;
 
 public class MessageModel {
 	
@@ -17,6 +17,8 @@ public class MessageModel {
 	public static final int LOCAL_FILE_UPDATE = 106;
 	/**当外接设备状态改变时重新加载数据***/
 	public static final int RELOAD_DATA_FROM_EXTERNAL = 107;
+	/** 获取接入设备的本地存储里固件包 **/
+	public static final int GET_LOCAL_STORAGE_FIRMWARE = 108;
 	
 
 	//2**系统网络信息
@@ -37,22 +39,26 @@ public class MessageModel {
 	 */
 	public final static String CONNECTION_TIMEOUT = "205";
 	
-	/*
-	 *  解析xml文件线程发出的消息的名称
-	 */
+	/** 解析xml文件线程发出的消息的名称 */
 	public static final int PARSE_XML_OK = 301;
-	/*
-	 *  发送下载进度信息
-	 */
+	/** 发送下载进度信息 */
 	public static final int PROGRESS_NUMBER = 302;
-	/*
-	 * 发送下载完成的信息
-	 */
+	/** 发送下载完成的信息 */
 	public static final int DOWNLOAD_OK = 303;
-	/* 系统提示信息类型之有更新的软件或固件 */
+	/** 系统提示信息类型之有更新的软件或固件 */
 	public static final int SYS_MSG_UPDATEMSG = 304;
-	/* 系统提示信息类型之安装成功消息 */
+	/** 系统提示信息类型之安装成功消息 */
 	public static final int SYS_MSG_INSTALLOK = 305;
-	/* 系统提示信息类型之安装失败消息 */
+	/** 系统提示信息类型之安装失败消息 */
 	public static final int SYS_MSG_INSTALLFAIL = 306;
+	
+	//4**代表应用程序信息
+	/** 配置文件key不存在 */
+	public final static String CONFIG_ERROR = "101";
+	/** 创建文件失败 */
+	public final static String CREATE_FILE_FAIL = "102";
+	/** 异常 */
+	public final static String APP_EXCEPTION = "103";
+	/** SD卡不存在 */
+	public final static String SDCARD_NOT_EXISTS = "104";
 }

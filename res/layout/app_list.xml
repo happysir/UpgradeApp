@@ -9,38 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:textColor="#FFFFFF" 
-        android:textSize="24sp"/>
-
-    <ProgressBar
-        android:id="@+id/app_down_probar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginRight="30dp"
-        android:max="100"
-        android:visibility="invisible" />
-
-    <CheckBox
-        android:id="@+id/item_cb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:clickable="false"
-        android:focusable="false"
-        android:focusableInTouchMode="false" />
-
-    <TextView
-        android:id="@+id/app_complete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:text="@string/downloaded"
         android:textColor="#FFFFFF"
-        android:textSize="32sp"
-        android:visibility="gone" />
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/app_schedule"
@@ -49,7 +19,18 @@
         android:layout_alignParentRight="true"
         android:text="@string/downloaded"
         android:textColor="#FFFFFF"
-        android:visibility="gone" />
+        android:textSize="32sp" />
+   <ProgressBar
+        android:id="@+id/app_down_probar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/app_schedule"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="30dp"   
+        android:max="100"
+        android:visibility="invisible" />
+ 
 
     <TextView
         android:id="@+id/app_version"
@@ -57,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/app_name"
         android:layout_marginTop="10dp"
-        android:textSize="24sp"
-        android:textColor="#FFFFFF" />
+        android:textColor="#FFFFFF"
+        android:textSize="24sp" />
 
 </RelativeLayout>

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dehoo.systemupdateapp;
+package com.dehoo.systemupdateapp.utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,6 +12,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import com.dehoo.systemupdateapp.config.MessageModel;
+import com.dehoo.systemupdateapp.utils.Util;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -41,6 +45,7 @@ public class DownLoadSoft {
 	private String mSavePath;
 	/* 记录进度条数量 */
 	private static int progress;
+	private static int progressSign =0;
 	/* 是否取消更新 */
 	private boolean cancelUpdate = false;
 	private long sdsize = 0;
@@ -48,18 +53,19 @@ public class DownLoadSoft {
 	/* 哈希值计算 */
 	private MessageDigest md5;
 	private static String hashnumber = null;
-	private static final char HEX_DIGITS[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-        'a', 'b', 'c', 'd', 'e', 'f' };
+	
+	private Util mUtil;
 	
 	//======================== 下面是本类的方法 ========================//
 	/**
 	 * Function:指定上下文
 	 * @author dehoo-ZhongHeliang 2013-2-28上午9:58:56
 	 */
-	public DownLoadSoft(Context context,Handler pHandler)
+	public DownLoadSoft(Context context,Handler pHandler, Util util)
 	{
 		this.mContext = context;
 		this.handler = pHandler;
+		this.mUtil = util;
 	}	
 	
 	/**
@@ -128,7 +134,7 @@ public class DownLoadSoft {
 						Log.d(TAG,"Path :"+file.getName());
 					}			
 					// 步骤四：计算存储区可以存储空间的大小
-					sdsize = getFreeSpaceInB(mSavePath);
+					sdsize = mUtil.getFreeSpaceInB(mSavePath);
 					if (DEBUG)
 					{
 						Log.d(TAG,"计算sd卡可用空间大小："+""+sdsize+"KB");
@@ -179,7 +185,7 @@ public class DownLoadSoft {
 					{
 						// 网络状态，1为网络通，0为不通
 						int networkstate = 1;
-						if (!isNetworkAvaiable())
+						if (!mUtil.isNetworkAvailable(mContext))
 						{
 							networkstate = 0;
 							cancelUpdate = true;
@@ -202,12 +208,15 @@ public class DownLoadSoft {
 						// 计算进度条位置
 						progress = (int) (((float) count / length) * 100);
 						// 发送进度条信息到界面
-						Message message = new Message();
-						message.what = MessageModel.PROGRESS_NUMBER;
-						message.arg1 = progress;
-						message.arg2 = networkstate;
-						message.obj = mFileName;
+						if(progressSign < progress){
+						   Message message = new Message();
+						   progressSign = progress;
+						   message.what = MessageModel.PROGRESS_NUMBER;
+						   message.arg1 = progress;
+						   message.arg2 = networkstate;
+						   message.obj = mFileName;
 						handler.sendMessage(message);
+						}
 						if (numread <= 0)
 						{
 							// 下载完成，退出模块
@@ -224,7 +233,7 @@ public class DownLoadSoft {
 					// 步骤七：根据下载的文件计算其hash值
 					try
 					{
-						hashnumber = toHexString(md5.digest());
+						hashnumber = mUtil.toHexString(md5.digest());
 						// 测试hash值
 						if (DEBUG)
 						{
@@ -257,7 +266,6 @@ public class DownLoadSoft {
 					}
 					catch (Exception e)
 					{
-						 
 						e.printStackTrace();
 					}					
 				}else {
@@ -274,75 +282,4 @@ public class DownLoadSoft {
 		
 	}
 	
-	/**
-	 * Function: getFreeSpaceInB
-	 * @author dehoo-ZhongHeliang 2013-2-28下午6:27:50
-	 * @param 所求存储区的绝对路径名
-	 * 获取存储空间的可以空间大小
-	 */
-	public long getFreeSpaceInB(String path) {
-    	long nSDFreeSize = 0;
-    	if (path != null) {
-        	StatFs statfs = new StatFs(path);
-
-    		long nBlocSize = statfs.getBlockSize();
-    		long nAvailaBlock = statfs.getAvailableBlocks();
-    		nSDFreeSize = nAvailaBlock * nBlocSize;
-    	}
-    	if (DEBUG)
-		{
-    		Log.d(TAG,"获取空间大小:"+Long.toString(nSDFreeSize)+"KB");
-		}
-    	
-		return nSDFreeSize;
-    }
-	
-	/**
-	 * Function: toHexString
-	 * 缓冲区数据
-	 * @author dehoo-ZhongHeliang 2013-3-7上午11:08:04
-	 * @param b 缓冲区数据
-	 * @return 通过缓冲区数据得到的hash值
-	 */
-	public String toHexString(byte[] b) {  
-		 StringBuilder sb = new StringBuilder(b.length * 2); 
-		 
-		 for(int i = 0; i < b.length; i++) {  
-		     sb.append(HEX_DIGITS[(b[i] & 0xf0) >>> 4]);  
-		     sb.append(HEX_DIGITS[b[i] & 0x0f]);  
-		 }  
-		 return sb.toString();  
-	}
-	
-	/**
-	 * Function: isNetworkAvaiable
-	 * 检查网络状态
-	 * @author dehoo-ZhongHeliang 2013-3-8上午10:31:56
-	 * @return true表示网络可用使用，false表示网路不可以
-	 */
-	public boolean isNetworkAvaiable()
-	{
-		ConnectivityManager connectivity = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-		if (connectivity == null)
-		{
-			Log.d(TAG, "无可以网络！");
-			return false;
-		}
-		else {
-			NetworkInfo[] info = connectivity.getAllNetworkInfo();
-			if (info != null)
-			{
-				for (int i = 0; i < info.length; i++)
-				{
-					if (info[i].getState() == NetworkInfo.State.CONNECTED)
-					{
-						 
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
 }

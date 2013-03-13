@@ -4,14 +4,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
 import android.util.Log;
 
 /**
@@ -62,7 +59,9 @@ class ParseXml {
 			}	
 			// 获取所有子节点
 			Element nameEle = (Element)fileEle.getElementsByTagName("realname").item(0);
+			Element versionnameEle = (Element)fileEle.getElementsByTagName("versionname").item(0);
 			Element versionEle = (Element)fileEle.getElementsByTagName("version").item(0);
+			Element packagenameEle = (Element)fileEle.getElementsByTagName("packagename").item(0);
 			Element urlEle = (Element)fileEle.getElementsByTagName("url").item(0);
 			Element hashnumberEle = (Element)fileEle.getElementsByTagName("hashnumber").item(0);
 			
@@ -70,9 +69,17 @@ class ParseXml {
 			Log.d(TAG, "aname is :"+aname);
 			map.put("realname",aname);
 			
+			String aversoinname = versionnameEle.getFirstChild().getNodeValue();
+			Log.d(TAG, "aversoinname is :"+aversoinname);
+			map.put("versionname",aversoinname);
+			
 			String aversoin = versionEle.getFirstChild().getNodeValue();
 			Log.d(TAG, "aversoin is :"+aversoin);
 			map.put("version",aversoin);
+			
+			String apackagename = packagenameEle.getFirstChild().getNodeValue();
+			Log.d(TAG, "apackagename is :"+apackagename);
+			map.put("packagename",apackagename);
 			
 			String aurl = urlEle.getFirstChild().getNodeValue();
 			Log.d(TAG, "aurl is :"+aurl);

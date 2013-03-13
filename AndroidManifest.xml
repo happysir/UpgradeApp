@@ -29,34 +29,13 @@
             <!-- android:theme="@android:style/Theme.Holo.Dialog" -->
         </activity>
         <activity
-            android:name=".NetworkList"
+            android:name="com.dehoo.systemupdateapp.NetworkList"
             android:label="@string/label" >
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
 
             <!-- android:theme="@android:style/Theme.Holo.Dialog" -->
         </activity>
-
-        <!-- added by huangdong 03-07 start -->
-        <activity
-            android:name="com.dehoo.upgradedialog.TipDialog"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" >
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <receiver android:name="com.dehoo.upgradedialog.UpgradeBroadcast" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-        <!-- added by huangdong 03-07 start -->
-
     </application>
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RESTART_PACKAGES" />

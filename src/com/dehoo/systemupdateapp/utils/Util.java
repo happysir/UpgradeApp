@@ -1,8 +1,7 @@
-package com.dehoo.systemupdateapp;
+package com.dehoo.systemupdateapp.utils;
 
 import java.io.File;
 import java.io.IOException;
-// modify by zhanmin 13.03.07
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -12,7 +11,10 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import org.apache.http.util.EncodingUtils;
-// modify by zhanmin 13.03.07 end
+import com.dehoo.systemupdateapp.config.MessageModel;
+import com.dehoo.systemupdateapp.entity.AppInfo;
+import com.dehoo.systemupdateapp.entity.Item;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +39,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.RecoverySystem;
+import android.os.StatFs;
 import android.util.Log;
 
 /**
@@ -53,6 +56,7 @@ public class Util {
 	private ConnectivityManager connectivity;
 	private PackageInfo pInfo;
 	private List<Map<String, String>> mTargetList = new ArrayList<Map<String, String>>(); // 存储固件刷机包文件
+	private static final char HEX_DIGITS[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
 	/**
 	 * 检查是否有sdcard
@@ -81,8 +85,7 @@ public class Util {
 	 */
 	public ConnectivityManager getConnectivityManager(Context context) {
 		connectivity = (ConnectivityManager) context.getSystemService("connectivity");
-		// connectivity = (ConnectivityManager)
-		// context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		// connectivity = (ConnectivityManager)scontext.getSystemService(Context.CONNECTIVITY_SERVICE);
 		return connectivity;
 	}
 
@@ -101,15 +104,50 @@ public class Util {
 		if (info != null) {
 			for (int i = 0; i < info.length; ++i) {
 				if (info[i].getState() == NetworkInfo.State.CONNECTED) {
-
-					Log.d(TAG, "it has net connetion !!");
-
+//					Log.d(TAG, "it has network connetion !!");
 					return true;
 				}
 			}
 		}
 		return false;
 	}
+	
+	/**
+	 * Function: toHexString
+	 * 缓冲区数据
+	 * @author dehoo-ZhongHeliang 2013-3-7上午11:08:04
+	 * @param b 缓冲区数据
+	 * @return 通过缓冲区数据得到的hash值
+	 */
+	public String toHexString(byte[] b) {  
+		 StringBuilder sb = new StringBuilder(b.length * 2); 
+		 
+		 for(int i = 0; i < b.length; i++) {  
+		     sb.append(HEX_DIGITS[(b[i] & 0xf0) >>> 4]);  
+		     sb.append(HEX_DIGITS[b[i] & 0x0f]);  
+		 }  
+		 return sb.toString();  
+	}
+	
+	/**
+	 * Function: getFreeSpaceInB
+	 * @author dehoo-ZhongHeliang 2013-2-28下午6:27:50
+	 * @param 所求存储区的绝对路径名
+	 * 获取存储空间的可以空间大小
+	 */
+	public long getFreeSpaceInB(String path) {
+    	long nSDFreeSize = 0;
+    	if (path != null) {
+        	StatFs statfs = new StatFs(path);
+    		long nBlocSize = statfs.getBlockSize();
+    		long nAvailaBlock = statfs.getAvailableBlocks();
+    		nSDFreeSize = nAvailaBlock * nBlocSize;
+    	}
+    	Log.d(TAG,"获取空间大小:"+Long.toString(nSDFreeSize)+"KB");
+    	
+		return nSDFreeSize;
+    }
+
 
 	/**
 	 * 检查一个字符串是否为异常消息
@@ -160,24 +198,51 @@ public class Util {
 	}
 
 	/**
-	 * 查看是否有更新
+	 * 查看App是否有更新
 	 * 
 	 * @param url
 	 * @param context
 	 * @return
 	 */
-	public boolean isNeedUpdate(String url, Context context) {
-		String result = NetworkService.sendGet(context, url);
-		Log.d(TAG, "the remote version is " + result);
-		if (result != null && !result.equals(MessageModel.RESPONSE_EXCEPTION) && !result.equals(MessageModel.CONNECTION_TIMEOUT)) {
-			if (result.indexOf("error") == -1) { // 如果返回结果没有error字样则继续
-				int remoteVersion = Integer.valueOf(result);
-				// int localVersion = getVersionCode(context).versionCode;
-				int localVersion = 7;
-				if (remoteVersion > localVersion) {
-					Log.d(TAG, "find the new version");
+	public boolean isNeedUpdate(Context context, Item item) {
+		String appPackageName = null;
+//		String appVersionName = null;
+		int appVersionCode = 0;
+		List<PackageInfo> packages = context.getPackageManager().getInstalledPackages(0);
+		for (int j = 0; j < packages.size(); j++) {
+			PackageInfo packageInfo = packages.get(j);
+			appPackageName = packageInfo.packageName;
+	//		appVersionName = packageInfo.versionName;
+			appVersionCode = packageInfo.versionCode;
+ 
+			if (appPackageName.equals(item.packageName)) {
+				Log.d("dehoo", item.realname + ":code" + appVersionCode);
+				if (appVersionCode < item.version) {
 					return true;
-				}
+				} else
+					return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Function: firmwareCheck  
+	 * @author dehoo-jiangmq 2013-3-8下午6:19:55
+	 *
+	 * 检测系统固件升级
+	 */
+	public boolean firmwareCheck(List<Item> firmwareList) {
+		String sysVersionName = android.os.Build.VERSION.RELEASE;
+		String sysVersion = android.os.Build.VERSION.CODENAME;
+		int sysVersionCode = android.os.Build.VERSION_CODES.BASE;
+		Log.d(TAG, "sysVersionName:" + sysVersionName + "---sysVersion:" + sysVersion + "----sysVersionCode" + sysVersionCode);
+		for (int j = 0; j < firmwareList.size(); j++) {
+			if(firmwareList.get(j).versionName==null){
+				 continue ;
+			}
+			if (firmwareList.get(j).version > sysVersionCode) {
+				return true;
 			}
 		}
 		return false;
@@ -308,6 +373,32 @@ public class Util {
 		Matcher m = p.matcher(str);
 		str = m.replaceAll("");
 		return str;
+	}
+
+	/**
+	 * 存储获取的应用信息数据　　
+	 * add by zhanmin 13.03.08
+	 * @param context
+	 * @return
+	 */
+	public List<AppInfo> getAllAppsInfo(Context context) {
+		ArrayList<AppInfo> appList = new ArrayList<AppInfo>();
+		List<PackageInfo> packages = context.getPackageManager().getInstalledPackages(0);
+
+		for (int i = 0; i < packages.size(); i++) {
+			PackageInfo packageInfo = packages.get(i);
+			AppInfo tmpInfo = new AppInfo();
+			tmpInfo.appName = packageInfo.applicationInfo.loadLabel(context.getPackageManager()).toString();
+			tmpInfo.packageName = packageInfo.packageName;
+			tmpInfo.versionName = packageInfo.versionName;
+			tmpInfo.versionCode = packageInfo.versionCode;
+			
+			Log.d(TAG, "packageInfo.packageName = " + packageInfo.packageName);
+//			Log.d(TAG, "packageInfo.versionName = " + packageInfo.versionName);
+//			Log.d(TAG, "packageInfo.versionCode = " + packageInfo.versionCode);
+			appList.add(tmpInfo);
+		}
+		return appList;
 	}
 
 	/**

@@ -11,7 +11,9 @@
     <string name="netsystemapp">系统升级-网络可用APP</string>
 	<string name="netsystem">系统升级-可用升级包</string>
 	<string name="no_firware">没有可用的升级包</string>
-	<string name="downloaded">已经下载</string>
+	<string name="downloaded">下载完成</string>
+	<string name="download">下  载</string>
+	<string name="cancel_download">取消下载</string>
 	
 	<!-- 钟合亮 -->
 	<string name="call_msg1">调用系统信息1</string>

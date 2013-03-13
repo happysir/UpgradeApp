@@ -1,7 +1,10 @@
 /**
  * 
  */
-package com.dehoo.systemupdateapp;
+package com.dehoo.systemupdateapp.utils;
+
+import com.dehoo.systemupdateapp.R;
+import com.dehoo.systemupdateapp.config.MessageModel;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -80,31 +83,21 @@ public class MessageSys
 				dialog.dismiss();
 				// 显示下载对话框
 				if (DEBUG)
-					Log.d(TAG, "==========安装成功成功提示，发安装成功广播进入下载==========");
+					Log.d(TAG, "==========安装成功成功提示，发安装成功消息进入下载==========");
 				// 发送安装成功的提示消息
 				Message message = new Message();
 				message.what = MessageModel.SYS_MSG_INSTALLOK;
 				mHandler.sendMessage(message);
 			}
 		});
-		builder.setNegativeButton(R.string.btn_cancle, new DialogInterface.OnClickListener()
-		{
-			@Override
-			public void onClick(DialogInterface dialog, int which)
-			{
-				dialog.dismiss();
-				// 显示下载对话框
-				if (DEBUG)
-					Log.d(TAG, "==========取消更新提示==========");
-			}
-		});
+		
 		Dialog noticeDialog = builder.create();
 		noticeDialog.show();
 		
 	}
 		
 	/**
-	 * Function: installOK
+	 * Function: installFail
 	 * 安装失败的系统提示
 	 * @author dehoo-ZhongHeliang 2013-3-2上午11:53:40
 	 */

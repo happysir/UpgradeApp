@@ -1,5 +1,8 @@
 package com.dehoo.systemupdateapp;
 
+import com.dehoo.systemupdateapp.config.MessageModel;
+import com.dehoo.systemupdateapp.utils.Util;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -42,14 +45,14 @@ public class MainActivity extends Activity {
 		setContentView( R.layout.mode_selection);
 
 			// --------------------------hdong---------------------------------
-		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-				.detectDiskReads().detectDiskWrites().detectNetwork()
-				.penaltyLog().build());
-
-		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-				.detectLeakedSqlLiteObjects() // 探测SQLite数据库操作
-				.penaltyLog() // 打印logcat
-				.penaltyDeath().build());
+//		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//				.detectDiskReads().detectDiskWrites().detectNetwork()
+//				.penaltyLog().build());
+//
+//		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//				.detectLeakedSqlLiteObjects() // 探测SQLite数据库操作
+//				.penaltyLog() // 打印logcat
+//				.penaltyDeath().build());
 		// --------------------------hdong---------------------------------	
 		
 		mUtil = new Util();
@@ -64,19 +67,12 @@ public class MainActivity extends Activity {
 			// 设置界面网络升级可点击
 			networkButton.setClickable(true);
 			networkButton.setEnabled(true);
-			// add by dehoo-jiangmq 17.03.04
 			networkButton.setFocusable(true);
-			//  add by jiangmq 17.03.04 end
-			
-		
 		} else {
 			// 设置界面网络升级不可点击
 			networkButton.setClickable(false);
 			networkButton.setEnabled(false);
-			// add by dehoo-jiangmq 17.03.04
 			networkButton.setFocusable(false);
-			//  add by jiangmq 17.03.04 end
-		
 		}
 
 		IntentFilter intentFilter = new IntentFilter();
@@ -89,58 +85,11 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
-		IntentFilter intentFilter = new IntentFilter(Intent.ACTION_MEDIA_MOUNTED);
-		intentFilter.addAction(Intent.ACTION_MEDIA_EJECT);
-		intentFilter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
-		intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-		intentFilter.addDataScheme("file");
-		registerReceiver(mMountReceiver, intentFilter);
-	}
-
-	private BroadcastReceiver mMountReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-			Uri uri = intent.getData();
-			String path = uri.getPath();
-
-			if (action == null || path == null)
-				return;
-
-			path = pathTransferForJB(path);
-
-			// if (action.equals(Intent.ACTION_MEDIA_EJECT)) {
-			//
-			// } else if (action.equals(Intent.ACTION_MEDIA_MOUNTED)) {
-			//
-			// } else if (action.equals(Intent.ACTION_MEDIA_UNMOUNTED)) {
-			//
-			// } else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
-			//
-			// }
-		}
-	};
-
-	private String pathTransferForJB(String path) {
-		String pathout = path;
-
-		if (path.startsWith("/storage/sd")) {
-			if (path.contains("/storage/sdcard0")) {
-				pathout = path.replaceFirst("/storage/sdcard0", "/mnt/sdcard");
-			} else {
-				pathout = path.replaceFirst("/storage/sd", "/mnt/sd");
-			}
-		}
-
-		return pathout;
 	}
 
 	/**
 	 * 接收网络状态改变广播
-	 * 
-	 * @author work
-	 * 
+	 * @author zhanmin
 	 */
 	private class ConnectionReceive extends BroadcastReceiver {
 
@@ -175,11 +124,7 @@ public class MainActivity extends Activity {
 			case MessageModel.NETWORK_UPDATE_BUTTON_USEFUL : // 有网络
 				networkButton.setClickable(true);
 				networkButton.setEnabled(true);
-				 
-				// add by dehoo-jiangmq 17.03.04
 				networkButton.setFocusable(true);
-				//  add by jiangmq 17.03.04 end
-
 				break;
 			case MessageModel.NETWORK_UPDATE_BUTTON_NOT_USEFUL : // 无网络
 				networkButton.setClickable(false);
@@ -199,7 +144,6 @@ public class MainActivity extends Activity {
 						// 显示所有更新内容
 						Intent searchIntent = new Intent(MainActivity.this, NetworkList.class);
 						startActivity(searchIntent);
-						
 					}
 				}
 				break;
@@ -219,9 +163,11 @@ public class MainActivity extends Activity {
 		if (mConnectionReceive != null) {
 			unregisterReceiver(mConnectionReceive);
 		}
-		if (mMountReceiver != null) {
-			unregisterReceiver(mMountReceiver);
-		}
+		// modify by zhanmin 13.03.07
+//		if (mMountReceiver != null) {
+//			unregisterReceiver(mMountReceiver);
+//		}
+		// modify by zhanmin 13.03.07 end
 	}
 
 	/**
